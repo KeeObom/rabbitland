@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-fraunces: "Fraunces", Georgia, serif;
+  --font-inter: "Inter", sans-serif;
+  --font-plex-mono: "IBM Plex Mono", monospace;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #F5EFE1;
+  color: #2B2620;
+}
+
+/* Signature element: the sunrise-arc divider, echoing the badge logo's
+   rising-sun motif. Used sparingly between major sections. */
+.arc-divider {
+  position: relative;
+  height: 80px;
+  overflow: hidden;
+}
+.arc-divider svg {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140%;
+  max-width: 1400px;
+}
+
+/* Hand-stamped badge, echoing the circular logo crest */
+.stamp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1.5px solid currentColor;
+  border-radius: 9999px;
+  padding: 0.35rem 0.9rem;
+  font-family: var(--font-plex-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.container-page {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+::selection {
+  background-color: #C79A3D;
+  color: #122B15;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #C79A3D;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
