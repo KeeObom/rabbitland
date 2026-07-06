@@ -5,6 +5,8 @@ import ImageSwatch from "@/components/ImageSwatch";
 import { categories, products } from "@/lib/data/products";
 import { formatNaira } from "@/lib/data/products";
 
+// Adding
+
 export default function HomePage() {
   const featured = products.slice(0, 4);
 
