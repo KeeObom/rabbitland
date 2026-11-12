@@ -2,13 +2,17 @@ import Link from "next/link";
 import Image from "next/image";
 import ArcDivider from "@/components/ArcDivider";
 import ImageSwatch from "@/components/ImageSwatch";
-import { categories, products } from "@/lib/data/products";
-import { formatNaira } from "@/lib/data/products";
+import ProductImage from "@/components/ProductImage";
+import { categories, getProducts, getTrainingSessions } from "@/lib/catalog";
+import { formatNaira, formatDateTime } from "@/lib/format";
 
-// Adding
+export const revalidate = 60;
 
-export default function HomePage() {
-  const featured = products.slice(0, 4);
+export default async function HomePage() {
+  const [products, sessions] = await Promise.all([getProducts(), getTrainingSessions()]);
+  const rabbits = products.filter((p) => p.category === "rabbits").slice(0, 4);
+  const featured = products.filter((p) => p.category !== "rabbits").slice(0, 4);
+  const nextSession = sessions.find((s) => !s.startsAt || new Date(s.startsAt) > new Date());
 
   return (
     <>
@@ -17,7 +21,7 @@ export default function HomePage() {
         <div className="container-page py-20 md:py-28 grid md:grid-cols-2 gap-12 items-center relative z-10">
           <div>
             <span className="stamp-badge border-gold text-gold mb-6">
-              Warri, Delta State
+              Port Harcourt · Delivering nationwide
             </span>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] mt-4">
               A rabbit business,
@@ -25,22 +29,22 @@ export default function HomePage() {
               <span className="italic text-gold">built to scale.</span>
             </h1>
             <p className="mt-6 text-cream/80 text-lg max-w-md">
-              Feed, cages, manure and hands-on consultancy for anyone
-              starting or growing a commercial rabbitry — whether that's
-              four does in a backyard or four hundred on a farm.
+              Healthy live rabbits, farm supplies, online training and
+              consultancy for anyone starting or growing a rabbitry —
+              whether that's four does in a backyard or four hundred on a farm.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
-                href="/shop"
+                href="/shop/rabbits"
                 className="bg-gold text-forest-dark font-mono text-sm uppercase tracking-wide px-6 py-3 rounded-full hover:bg-gold-light transition-colors"
               >
-                Shop Farm Supplies
+                Buy Rabbits
               </Link>
               <Link
-                href="/consultancy"
+                href="/training"
                 className="border border-cream/40 text-cream font-mono text-sm uppercase tracking-wide px-6 py-3 rounded-full hover:border-gold hover:text-gold transition-colors"
               >
-                Book Consultancy
+                Online Training
               </Link>
             </div>
           </div>
@@ -111,6 +115,41 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* LIVE RABBITS */}
+      {rabbits.length > 0 && (
+        <section className="container-page pb-16 md:pb-20">
+          <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
+            <div>
+              <span className="font-mono text-xs uppercase tracking-widest text-gold-dark">
+                Available now
+              </span>
+              <h2 className="font-display text-3xl md:text-4xl text-forest-dark mt-2">
+                Live rabbits, ready to go
+              </h2>
+            </div>
+            <Link href="/shop/rabbits" className="text-forest-dark font-mono text-sm underline underline-offset-4 hover:text-gold-dark">
+              See all rabbits →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+            {rabbits.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/product/${p.slug}`}
+                className="border border-forest/15 rounded-lg overflow-hidden bg-white/60 hover:border-gold transition-colors"
+              >
+                <ProductImage src={p.image} alt={p.name} className="h-36 w-full" tone="gold" />
+                <div className="p-3">
+                  <h4 className="font-display text-sm text-forest-dark leading-snug">{p.name}</h4>
+                  <p className="text-xs text-charcoal/60 mt-0.5">{p.rabbit?.age}</p>
+                  <div className="font-mono text-sm text-gold-dark mt-1">{formatNaira(p.price)}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* SHOP CATEGORIES */}
       <section className="bg-sage/15 py-16 md:py-20">
         <div className="container-page">
@@ -128,7 +167,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
             {categories.map((c) => (
               <Link
                 key={c.slug}
@@ -163,7 +202,7 @@ export default function HomePage() {
               href={`/product/${p.slug}`}
               className="border border-forest/15 rounded-lg overflow-hidden bg-white/60 hover:border-gold transition-colors"
             >
-              <ImageSwatch label={p.name} className="h-32 w-full" tone="sage" />
+              <ProductImage src={p.image} alt={p.name} className="h-32 w-full" />
               <div className="p-3">
                 <h4 className="font-display text-sm text-forest-dark leading-snug">
                   {p.name}
@@ -174,6 +213,41 @@ export default function HomePage() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* TRAINING CTA */}
+      <section className="bg-sage/15 py-16 md:py-20">
+        <div className="container-page grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <span className="stamp-badge border-forest/40 text-forest-dark">Live · Online</span>
+            <h2 className="font-display text-3xl md:text-4xl text-forest-dark mt-4 leading-tight">
+              Learn rabbit farming from anywhere in Nigeria
+            </h2>
+            <p className="mt-4 text-charcoal/75 max-w-md">
+              Live online classes for beginners and growing farms — breeds,
+              housing, feeding, breeding, disease prevention and selling.
+            </p>
+            <Link
+              href="/training"
+              className="inline-block mt-6 bg-forest text-cream font-mono text-sm uppercase tracking-wide px-6 py-3 rounded-full hover:bg-forest-light transition-colors"
+            >
+              See upcoming classes
+            </Link>
+          </div>
+          {nextSession && (
+            <Link
+              href={`/training/${nextSession.slug}`}
+              className="block border border-forest/15 rounded-xl p-6 bg-white/70 hover:border-gold transition-colors"
+            >
+              <span className="font-mono text-xs uppercase tracking-widest text-gold-dark">
+                Next class · {formatDateTime(nextSession.startsAt)}
+              </span>
+              <h3 className="font-display text-2xl text-forest-dark mt-2">{nextSession.title}</h3>
+              <p className="text-sm text-charcoal/70 mt-2">{nextSession.summary}</p>
+              <div className="mt-4 font-mono text-forest-dark">{formatNaira(nextSession.price)}</div>
+            </Link>
+          )}
         </div>
       </section>
 

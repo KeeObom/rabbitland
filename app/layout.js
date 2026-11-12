@@ -3,6 +3,7 @@ import "./globals.css";
 import { CartProvider } from "@/components/CartProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import WhatsAppBubble from "@/components/WhatsAppBubble";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -26,7 +27,7 @@ const plexMono = IBM_Plex_Mono({
 export const metadata = {
   title: "Rabbit Land Agribusiness | Commercial Farming & Consultation",
   description:
-    "Commercial rabbit farming, feed, cages, manure and consultancy services based in Warri, Delta State, Nigeria.",
+    "Buy live rabbits, feed, cages and manure, and join online rabbit farming training. Based in Port Harcourt, Rivers State — delivering nationwide.",
 };
 
 export default function RootLayout({ children }) {
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
           <Navbar />
           <main>{children}</main>
           <Footer />
+          <WhatsAppBubble />
         </CartProvider>
       </body>
     </html>
