@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
-import { categories, getProductsByCategory } from "@/lib/data/products";
+import { categories, getProductsByCategory } from "@/lib/catalog";
+import { whatsappLink } from "@/lib/config";
+
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return categories.map((c) => ({ category: c.slug }));
@@ -12,11 +15,12 @@ export function generateMetadata({ params }) {
   return { title: cat ? `${cat.name} | Rabbit Land Agribusiness` : "Shop" };
 }
 
-export default function CategoryPage({ params }) {
+export default async function CategoryPage({ params }) {
   const cat = categories.find((c) => c.slug === params.category);
   if (!cat) return notFound();
 
-  const items = getProductsByCategory(cat.slug);
+  const items = await getProductsByCategory(cat.slug);
+  const isRabbits = cat.slug === "rabbits";
 
   return (
     <div className="container-page py-14">
@@ -24,7 +28,27 @@ export default function CategoryPage({ params }) {
         ← All products
       </Link>
       <h1 className="font-display text-4xl text-forest-dark mt-3 mb-2">{cat.name}</h1>
-      <p className="text-charcoal/75 mb-10">{cat.tagline}</p>
+      <p className="text-charcoal/75 mb-6">{cat.tagline}</p>
+
+      {isRabbits && (
+        <div className="border border-gold/40 bg-gold/10 rounded-xl p-5 mb-10 grid sm:grid-cols-3 gap-4 text-sm">
+          <div>
+            <span className="font-mono text-xs uppercase tracking-widest text-gold-dark block mb-1">Health-checked</span>
+            Every rabbit is checked and dewormed before it leaves the farm.
+          </div>
+          <div>
+            <span className="font-mono text-xs uppercase tracking-widest text-gold-dark block mb-1">Pickup or delivery</span>
+            Collect in Port Harcourt, or we deliver live rabbits nationwide.
+          </div>
+          <div>
+            <span className="font-mono text-xs uppercase tracking-widest text-gold-dark block mb-1">Need advice first?</span>
+            <a href={whatsappLink("Hello Rabbit Land! I need help choosing rabbits.")} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
+              Chat with us on WhatsApp
+            </a>{" "}
+            before you buy.
+          </div>
+        </div>
+      )}
 
       {items.length === 0 ? (
         <p className="text-charcoal/60">

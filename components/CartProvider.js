@@ -32,12 +32,14 @@ export function CartProvider({ children }) {
   }, [items, loaded]);
 
   function addItem(product, quantity = 1) {
+    // Respect tracked stock (null/undefined = not tracked)
+    const cap = product.stock ?? Infinity;
     setItems((prev) => {
       const existing = prev.find((i) => i.slug === product.slug);
       if (existing) {
         return prev.map((i) =>
           i.slug === product.slug
-            ? { ...i, quantity: i.quantity + quantity }
+            ? { ...i, stock: product.stock ?? null, quantity: Math.min(cap, i.quantity + quantity) }
             : i
         );
       }
@@ -50,7 +52,8 @@ export function CartProvider({ children }) {
           unit: product.unit,
           category: product.category,
           image: product.image,
-          quantity,
+          stock: product.stock ?? null,
+          quantity: Math.min(cap, quantity),
         },
       ];
     });
@@ -60,7 +63,9 @@ export function CartProvider({ children }) {
     setItems((prev) =>
       quantity <= 0
         ? prev.filter((i) => i.slug !== slug)
-        : prev.map((i) => (i.slug === slug ? { ...i, quantity } : i))
+        : prev.map((i) =>
+            i.slug === slug ? { ...i, quantity: Math.min(i.stock ?? Infinity, quantity) } : i
+          )
     );
   }
 

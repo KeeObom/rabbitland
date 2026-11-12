@@ -1,5 +1,6 @@
 import ImageSwatch from "@/components/ImageSwatch";
 import ArcDivider from "@/components/ArcDivider";
+import Link from "next/link";
 import { breeds, careTopics } from "@/lib/data/rabbits";
 
 export const metadata = {
@@ -82,6 +83,25 @@ export default function RabbitsPage() {
               <p className="text-sm text-charcoal/70 leading-relaxed">{t.body}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="container-page pb-4">
+        <div className="bg-forest text-cream rounded-2xl p-8 md:p-10 grid md:grid-cols-2 gap-6 items-center">
+          <div>
+            <h2 className="font-display text-3xl">Ready to start?</h2>
+            <p className="text-cream/80 mt-2">
+              Buy health-checked stock, or learn the whole process first in a live online class.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3 md:justify-end">
+            <Link href="/shop/rabbits" className="bg-gold text-forest-dark font-mono text-sm uppercase tracking-wide px-6 py-3 rounded-full hover:bg-gold-light">
+              Buy rabbits
+            </Link>
+            <Link href="/training" className="border border-cream/40 font-mono text-sm uppercase tracking-wide px-6 py-3 rounded-full hover:border-gold hover:text-gold">
+              Online training
+            </Link>
+          </div>
         </div>
       </section>
     </>

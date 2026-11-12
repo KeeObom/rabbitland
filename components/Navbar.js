@@ -6,10 +6,11 @@ import { useState } from "react";
 import { useCart } from "./CartProvider";
 
 const links = [
-  { href: "/rabbits", label: "About Rabbits" },
+  { href: "/shop/rabbits", label: "Buy Rabbits" },
   { href: "/shop", label: "Shop" },
+  { href: "/training", label: "Training" },
   { href: "/consultancy", label: "Consultancy" },
-  { href: "/about", label: "About Us" },
+  { href: "/rabbits", label: "About Rabbits" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -36,7 +37,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-7 font-body text-sm">
+        <nav className="hidden lg:flex items-center gap-6 font-body text-sm">
           {links.map((l) => (
             <Link key={l.href} href={l.href} className="hover:text-gold transition-colors">
               {l.label}
@@ -45,12 +46,6 @@ export default function Navbar() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Link
-            href="/account"
-            className="hidden sm:block text-sm hover:text-gold transition-colors"
-          >
-            Account
-          </Link>
           <Link
             href="/cart"
             className="relative flex items-center gap-1 border border-gold rounded-full px-3 py-1.5 text-sm hover:bg-gold hover:text-forest-dark transition-colors"
@@ -63,7 +58,7 @@ export default function Navbar() {
             )}
           </Link>
           <button
-            className="md:hidden text-cream"
+            className="lg:hidden text-cream"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
             aria-expanded={open}
@@ -76,14 +71,14 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <nav className="md:hidden bg-forest-dark border-t border-gold/20 px-6 py-4 flex flex-col gap-4 font-body text-sm">
+        <nav className="lg:hidden bg-forest-dark border-t border-gold/20 px-6 py-4 flex flex-col gap-4 font-body text-sm">
           {links.map((l) => (
             <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="hover:text-gold">
               {l.label}
             </Link>
           ))}
-          <Link href="/account" onClick={() => setOpen(false)} className="hover:text-gold">
-            Account
+          <Link href="/about" onClick={() => setOpen(false)} className="hover:text-gold">
+            About Us
           </Link>
         </nav>
       )}

@@ -37,23 +37,24 @@ export default function AboutPage() {
         <div>
           <h3 className="font-display text-xl text-forest-dark mb-2">What we sell</h3>
           <p className="text-sm text-charcoal/70 leading-relaxed">
-            Feed formulated by growth stage, welded-mesh cages built for
-            Nigerian farm conditions, and manure sold both bagged and by the
-            tonne to farms and nurseries.
+            Healthy live rabbits for meat and breeding, feed formulated by
+            growth stage, welded-mesh cages built for Nigerian farm
+            conditions, and manure sold bagged or by the tonne.
           </p>
         </div>
         <div>
           <h3 className="font-display text-xl text-forest-dark mb-2">What we advise on</h3>
           <p className="text-sm text-charcoal/70 leading-relaxed">
-            Housing layout, breeding schedules, feed costing and the record
-            systems that let a farm see, in numbers, what's actually working.
+            Housing layout, breeding schedules, feed costing and record
+            systems — through one-on-one consultancy and live online training
+            open to farmers anywhere in Nigeria.
           </p>
         </div>
         <div>
           <h3 className="font-display text-xl text-forest-dark mb-2">Where we operate</h3>
           <p className="text-sm text-charcoal/70 leading-relaxed">
-            Based in Warri, Delta State, serving farms across the region with
-            delivery arranged for bulk feed, cage and manure orders.
+            Based in Port Harcourt, Rivers State. Customers can pick up from the
+            farm, and we deliver rabbits and supplies nationwide.
           </p>
         </div>
       </div>
