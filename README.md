@@ -65,13 +65,27 @@ expiry, CVV `408`, PIN `0000`, OTP `123456`.
 | Task | Where |
 | --- | --- |
 | Add / edit rabbits & products, prices, stock | `products` table (set `active` false to hide) |
-| Add a product photo | Storage → create a public bucket → upload → copy URL into `image_url` |
+| Add a product photo | Storage → `product-images` → upload a file named `<slug>.jpg` (e.g. `starter-trio.jpg`). That's it — see "Product photos" below |
 | See paid orders | `orders` table, filter `status = paid`; update status as you dispatch |
 | Add a training session | `training_sessions` table |
 | See who registered | `training_registrations`, filter `status = paid` |
 | Read contact messages | `contact_messages` |
 
 Pages refresh their data from the database every 60 seconds.
+
+## Product photos
+
+1. Run `supabase/storage.sql` once in the SQL Editor (creates the public `product-images` bucket).
+2. Name each photo after the product's `slug` and upload it to **Storage → product-images**:
+   `nzw-weaner-8wk.jpg`, `californian-breeding-doe.jpg`, `starter-trio.jpg`, …
+3. The photo appears on the site within about a minute. Products without a
+   photo keep showing the placeholder.
+
+To use a different file name or a `.png`/`.webp`, type the file name (or a
+full image URL) into that product's `image_url` column.
+
+Tips: landscape (4:3) photos around 1200×900px, under ~500 KB, good daylight,
+plain background. Real photos of your own animals build far more trust than stock images.
 
 ## Deploying
 
