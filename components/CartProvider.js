@@ -75,6 +75,14 @@ export function CartProvider({ children }) {
 
   function clearCart() {
     setItems([]);
+    // Remove the saved copy immediately too. Without this, clearing the cart
+    // on page load (e.g. the payment success page) could happen before the
+    // saved cart is read back from the browser, which then restored it.
+    try {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {
+      console.error("Could not clear saved cart:", e);
+    }
   }
 
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);

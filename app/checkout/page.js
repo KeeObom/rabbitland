@@ -10,7 +10,9 @@ const inputCls = "w-full border border-forest/20 rounded px-3 py-2 bg-white";
 const labelCls = "text-sm font-mono text-charcoal/70 block mb-1";
 
 export default function CheckoutPage() {
-  const { items, subtotal } = useCart();
+  const { items, subtotal, clearCart } = useCart();
+  const [sentOnWhatsApp, setSentOnWhatsApp] = useState(false);
+  const [whatsAppDone, setWhatsAppDone] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", notes: "" });
   const [method, setMethod] = useState("pickup");
   const [state, setState] = useState("Rivers");
@@ -50,6 +52,21 @@ export default function CheckoutPage() {
       setError(err.message);
       setSubmitting(false);
     }
+  }
+
+  if (whatsAppDone) {
+    return (
+      <div className="container-page py-20 text-center max-w-xl">
+        <span className="stamp-badge border-gold text-gold-dark">Order sent on WhatsApp</span>
+        <h1 className="font-display text-3xl text-forest-dark mt-4 mb-3">Thanks! We'll reply on WhatsApp</h1>
+        <p className="text-charcoal/70 mb-8">
+          We'll confirm availability, delivery and payment details with you in the chat.
+        </p>
+        <Link href="/shop" className="inline-block bg-forest text-cream font-mono text-sm uppercase tracking-wide px-6 py-3 rounded-full">
+          Continue shopping
+        </Link>
+      </div>
+    );
   }
 
   if (items.length === 0) {
@@ -187,10 +204,26 @@ export default function CheckoutPage() {
             href={whatsappLink(waOrder)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => setSentOnWhatsApp(true)}
             className="block text-center text-sm underline underline-offset-4 text-forest-dark hover:text-gold-dark mt-4"
           >
             Or send this order on WhatsApp
           </a>
+          {sentOnWhatsApp && (
+            <div className="mt-4 border border-[#25D366]/50 bg-[#25D366]/10 rounded-lg p-3 text-center">
+              <p className="text-sm text-charcoal/80 mb-2">Sent your order on WhatsApp?</p>
+              <button
+                type="button"
+                onClick={() => {
+                  clearCart();
+                  setWhatsAppDone(true);
+                }}
+                className="text-xs font-mono uppercase tracking-wide bg-forest text-cream rounded-full px-4 py-2"
+              >
+                Yes, clear my cart
+              </button>
+            </div>
+          )}
         </aside>
       </form>
     </div>

@@ -73,6 +73,29 @@ expiry, CVV `408`, PIN `0000`, OTP `123456`.
 
 Pages refresh their data from the database every 60 seconds.
 
+## Order alerts to you (email + WhatsApp)
+
+You get an alert for every **paid order**, **paid training registration**
+and **contact-form message**. Set up either channel, or both. Each one only
+switches on when its keys are in `.env.local`.
+
+**Email (Resend, free tier)**
+1. Sign up at https://resend.com with the email you want alerts on.
+2. **API Keys → Create API key** and put it in `RESEND_API_KEY`.
+3. Put that same email in `OWNER_EMAIL`.
+   (To send *from* your own address, such as orders@yourdomain.com, verify a
+   domain in Resend later and set `EMAIL_FROM`.)
+
+**WhatsApp (CallMeBot, free for messages to your own number)**
+1. Open https://www.callmebot.com/blog/free-api-whatsapp-messages/ on your phone
+   and save the bot number it shows in your contacts. The number changes from
+   time to time, and if the page says the bot is full, try again in a few days.
+2. On WhatsApp, send that contact: `I allow callmebot to send me messages`
+3. It replies with your API key. Put it in `CALLMEBOT_APIKEY`, and your number
+   (with +234) in `CALLMEBOT_PHONE`.
+
+Restart `npm run dev` after editing `.env.local`.
+
 ## Product photos
 
 1. Run `supabase/storage.sql` once in the SQL Editor (creates the public `product-images` bucket).
