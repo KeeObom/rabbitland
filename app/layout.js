@@ -4,6 +4,7 @@ import { CartProvider } from "@/components/CartProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppBubble from "@/components/WhatsAppBubble";
+import HideOnAdmin from "@/components/HideOnAdmin";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -37,10 +38,14 @@ export default function RootLayout({ children }) {
         className={`${fraunces.variable} ${inter.variable} ${plexMono.variable} font-body`}
       >
         <CartProvider>
-          <Navbar />
+          <HideOnAdmin>
+            <Navbar />
+          </HideOnAdmin>
           <main>{children}</main>
-          <Footer />
-          <WhatsAppBubble />
+          <HideOnAdmin>
+            <Footer />
+            <WhatsAppBubble />
+          </HideOnAdmin>
         </CartProvider>
       </body>
     </html>
