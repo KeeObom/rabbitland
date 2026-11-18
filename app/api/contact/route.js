@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { hasSupabase, sb } from "@/lib/supabase";
+import { notifyOwner, contactNotification } from "@/lib/notify";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -37,6 +38,9 @@ export async function POST(request) {
         message: message.slice(0, 5000),
       },
     });
+    await notifyOwner(
+      contactNotification({ name, email, phone: body.phone, topic: body.topic, message })
+    ).catch((err) => console.error("Owner notification failed:", err));
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error(err);

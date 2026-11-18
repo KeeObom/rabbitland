@@ -60,18 +60,62 @@ Edit `lib/config.js`: phone, email, pickup location and **delivery fees**
 With test keys, use Paystack's test card `4084 0840 8408 4081`, any future
 expiry, CVV `408`, PIN `0000`, OTP `123456`.
 
-## Running the business day to day (Supabase → Table Editor)
+## Admin area — running the business day to day
 
-| Task | Where |
+Go to **/admin** (e.g. http://localhost:3000/admin) and log in with the
+`ADMIN_PASSWORD` from `.env.local`.
+
+| Page | What you can do |
 | --- | --- |
-| Add / edit rabbits & products, prices, stock | `products` table (set `active` false to hide) |
-| Add a product photo | Storage → create a public bucket → upload → copy URL into `image_url` |
-| See paid orders | `orders` table, filter `status = paid`; update status as you dispatch |
-| Add a training session | `training_sessions` table |
-| See who registered | `training_registrations`, filter `status = paid` |
-| Read contact messages | `contact_messages` |
+| **Dashboard** | Orders waiting, this month's sales, unread messages, low stock, upcoming classes |
+| **Orders** | See paid orders, WhatsApp the customer, mark as processing → dispatched → completed, or cancel. "Unpaid / abandoned" lists checkouts that weren't paid |
+| **Products** | Add rabbits and products, change prices and stock, upload photos, hide products from the site |
+| **Training** | Create sessions, see who registered and paid, copy all emails/phones to send the class link |
+| **Messages** | Contact-form messages. Reply, then mark as done |
 
-Pages refresh their data from the database every 60 seconds.
+Changes show on the live site straight away. You can still use the Supabase
+Table Editor for anything the admin area doesn't cover.
+
+## Order alerts to you (email + WhatsApp)
+
+You get an alert for every **paid order**, **paid training registration**
+and **contact-form message**. Set up either channel, or both. Each one only
+switches on when its keys are in `.env.local`.
+
+**Email (Resend, free tier)**
+1. Sign up at https://resend.com with the email you want alerts on.
+2. **API Keys → Create API key** and put it in `RESEND_API_KEY`.
+3. Put that same email in `OWNER_EMAIL`.
+   (To send *from* your own address, such as orders@yourdomain.com, verify a
+   domain in Resend later and set `EMAIL_FROM`.)
+
+**WhatsApp (CallMeBot, free for messages to your own number)**
+1. Open https://www.callmebot.com/blog/free-api-whatsapp-messages/ on your phone
+   and save the bot number it shows in your contacts. The number changes from
+   time to time, and if the page says the bot is full, try again in a few days.
+2. On WhatsApp, send that contact: `I allow callmebot to send me messages`
+3. It replies with your API key. Put it in `CALLMEBOT_APIKEY`, and your number
+   (with +234) in `CALLMEBOT_PHONE`.
+
+Restart `npm run dev` after editing `.env.local`.
+
+## Product photos
+
+Run `supabase/storage.sql` once in the SQL Editor to create the public
+`product-images` bucket. Then upload photos from **Admin → Products → (product) → Photo**.
+
+Or upload directly in Supabase:
+
+1. Name each photo after the product's `slug` and upload it to **Storage → product-images**:
+   `nzw-weaner-8wk.jpg`, `californian-breeding-doe.jpg`, `starter-trio.jpg`, …
+2. The photo appears on the site within about a minute. Products without a
+   photo keep showing the placeholder.
+
+To use a different file name or a `.png`/`.webp`, type the file name (or a
+full image URL) into that product's `image_url` column.
+
+Tips: landscape (4:3) photos around 1200×900px, under ~500 KB, good daylight,
+plain background. Real photos of your own animals build far more trust than stock images.
 
 ## Deploying
 
@@ -104,6 +148,9 @@ app/
   training/page.js        → Upcoming online training sessions
   training/[slug]/page.js → Session details + registration form
   contact/page.js         → Contact form (saved to Supabase)
+  admin/login             → Admin password login
+  admin/(protected)/...   → Dashboard, orders, products, training, messages
+  admin/actions.js        → All admin save/update actions (login-checked)
   api/checkout            → Creates order, starts Paystack payment
   api/training/register   → Creates registration, starts Paystack payment
   api/contact             → Saves contact messages
@@ -123,10 +170,12 @@ components/
 lib/
   config.js               → business details, WhatsApp number, delivery fees
   catalog.js              → reads products & sessions (Supabase or fallback)
-  supabase.js, paystack.js, fulfil.js → server-only helpers
+  supabase.js, paystack.js, fulfil.js, notify.js → server-only helpers
+  admin-auth.js, admin-data.js → admin login + admin database reads
   data/                   → placeholder fallback data + breed/care info
 
 supabase/schema.sql       → database tables, payment functions, starter data
+supabase/storage.sql      → public bucket for product photos
 ```
 
 ## Design notes
