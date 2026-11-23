@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "emails:export": "node scripts/export-email-templates.mjs"
   },
   "dependencies": {
     "next": "14.2.5",
