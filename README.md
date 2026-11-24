@@ -99,6 +99,36 @@ switches on when its keys are in `.env.local`.
 
 Restart `npm run dev` after editing `.env.local`.
 
+## Confirmation emails to customers
+
+Once `EMAIL_FROM` is set (with your domain verified in Resend), customers get
+a branded email after paying:
+- **Order confirmation:** items, total paid, pickup or delivery details
+- **Training confirmation:** class, date and time, platform, fee paid
+
+Customer replies go to `EMAIL_REPLY_TO`, or to `OWNER_EMAIL` if that isn't set.
+
+### Editing the design in Resend (optional)
+
+By default the site uses the built-in designs in `lib/email-templates.js`.
+To edit them in Resend's visual editor instead:
+
+1. **Resend → Templates → Create template**, then import or paste the HTML from
+   `emails/order-confirmation.html`.
+2. Add these **variables** (exact names):
+   `CUSTOMER_NAME, ORDER_REF, ITEMS_HTML, SUBTOTAL, DELIVERY_LABEL, DELIVERY_FEE, TOTAL, DELIVERY_DETAILS_HTML, NEXT_STEP`
+3. Set the alias to `order-confirmation`, use **Send test email** to check it, then click **Publish**.
+   Only published templates can be sent.
+4. Put the alias (or template ID) in `RESEND_TEMPLATE_ORDER`.
+5. Repeat for `emails/training-confirmation.html` → `RESEND_TEMPLATE_TRAINING`, with the variables
+   `CUSTOMER_NAME, REFERENCE, SESSION_TITLE, SESSION_DATE, SESSION_DURATION, PLATFORM, AMOUNT`
+
+If a Resend template ever fails to send, the site automatically falls back to
+the built-in design, so the customer still gets their email. Avoid putting
+variables inside link addresses (`href`) in Resend templates.
+
+After editing `lib/email-templates.js`, run `npm run emails:export` to refresh the `emails/*.html` files.
+
 ## Product photos
 
 Run `supabase/storage.sql` once in the SQL Editor to create the public
